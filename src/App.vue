@@ -1,30 +1,44 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="fixed h-full w-full bg-gray-500">
+    <Top class="border border-gray-500 text-[10px]">
+      <TopItem @mouseenter="fileMenuIsDisplay = true" @mouseleave="fileMenuIsDisplay = false">File </TopItem>
+      <TopItem>Edit</TopItem>
+      <TopItem>Options</TopItem>
+      <TopItem>Help</TopItem>
+      <div v-if="fileMenuIsDisplay">
+        <TopItemChild :x="0" :y="20" @mouseenter="fileMenuIsDisplay=true" @mouseleave="fileMenuIsDisplay=false" v-if="fileMenuIsDisplay">
+          <TopItemChildItem @click="clickNew">New</TopItemChildItem>
+          <TopItemChildItem>Open</TopItemChildItem>
+        </TopItemChild>
+      </div>
+    </Top>
+    
+    <router-view></router-view>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <dialog class="border border-3 border-gray-500 w-[600px] h-[400px] self-center" id="new">
+    <div>
+      <div>Name: <input/></div>
+      <div>Width: <input/></div>
+      <div>Height: <input/></div>
+      <div>Path: <input/><button>Choose</button></div>
+    </div>
+  </dialog>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script setup lang="ts">
+import Top from './widgets/Top.vue'
+import TopItem from './widgets/TopItem.vue'
+import { ref } from 'vue';
+import TopItemChild from './widgets/TopItemChild.vue';
+import TopItemChildItem from './widgets/TopItemChildItem.vue';
+import { newProject } from './apis/new';
+
+const fileMenuIsDisplay = ref(false)
+
+function clickNew() {
+      console.log('www');
+      
+      document.querySelector('#new')?.setAttribute('open', '')
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+
+</script>
